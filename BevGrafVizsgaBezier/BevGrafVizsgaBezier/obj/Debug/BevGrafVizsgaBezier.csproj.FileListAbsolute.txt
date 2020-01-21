@@ -1,0 +1,10 @@
+D:\EKE\5.fv\Grafika ea\BevGrafVizsgaBezier\BevGrafVizsgaBezier\obj\Debug\BevGrafVizsgaBezier.csprojAssemblyReference.cache
+D:\EKE\5.fv\Grafika ea\BevGrafVizsgaBezier\BevGrafVizsgaBezier\obj\Debug\BevGrafVizsgaBezier.Properties.Resources.resources
+D:\EKE\5.fv\Grafika ea\BevGrafVizsgaBezier\BevGrafVizsgaBezier\obj\Debug\BevGrafVizsgaBezier.csproj.GenerateResource.cache
+D:\EKE\5.fv\Grafika ea\BevGrafVizsgaBezier\BevGrafVizsgaBezier\obj\Debug\BevGrafVizsgaBezier.csproj.CoreCompileInputs.cache
+D:\EKE\5.fv\Grafika ea\BevGrafVizsgaBezier\BevGrafVizsgaBezier\bin\Debug\BevGrafVizsgaBezier.exe.config
+D:\EKE\5.fv\Grafika ea\BevGrafVizsgaBezier\BevGrafVizsgaBezier\bin\Debug\BevGrafVizsgaBezier.exe
+D:\EKE\5.fv\Grafika ea\BevGrafVizsgaBezier\BevGrafVizsgaBezier\bin\Debug\BevGrafVizsgaBezier.pdb
+D:\EKE\5.fv\Grafika ea\BevGrafVizsgaBezier\BevGrafVizsgaBezier\obj\Debug\BevGrafVizsgaBezier.Form1.resources
+D:\EKE\5.fv\Grafika ea\BevGrafVizsgaBezier\BevGrafVizsgaBezier\obj\Debug\BevGrafVizsgaBezier.exe
+D:\EKE\5.fv\Grafika ea\BevGrafVizsgaBezier\BevGrafVizsgaBezier\obj\Debug\BevGrafVizsgaBezier.pdb
