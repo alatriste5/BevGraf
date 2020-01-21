@@ -229,6 +229,7 @@ namespace BevGrafVizsgaBezier
 
             return uj;
         }
+        /*
         private PointF SzamolX(PointF p1, PointF p2, PointF p3) 
         {
             PointF uj = new PointF();
@@ -236,9 +237,7 @@ namespace BevGrafVizsgaBezier
             uj.Y = p3.Y;
 
             uj.X = (uj.X - p1.Y) / m2 + p1.X;
-            
-
             return uj;
-        }
+        }*/
     }
 }
