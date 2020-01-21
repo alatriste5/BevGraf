@@ -100,16 +100,26 @@ namespace BevGrafVizsgaBezier
                     indexe 4,7,10 -> tehát 2-t hozzáadva 6,9,12-t kapok
                     Ha ezek egyikéről van szó akkor az egér helyzete alapján az egyenes egyenletével kiszámolom, hogy csak a vonalon lehessen
                     mozgatni.*/
-                if (found1 != 0 && (found1 + 2) % 3 == 0)
+                if (found1 != 0 && found1 != 1 && found1 != 1 && (found1 + 2) % 3 == 0)
                 {
                     P[found1] = SzamolY(P[found1], P[found1 - 1], e.Location);
                 }
-                else if (found1 != 0 && found1 % 3 == 0 && found1 + 1 < P.Count) // az egyenest alkotó 2. pontról van szó
+                else if (found1 != 0 && found1 != 1 && found1 % 3 == 0 && found1 + 1 < P.Count) // az egyenest alkotó 2. pontról van szó
                 {
                     P[found1] = e.Location;
-                    P[found1 + 1] = SzamolY(P[found1 - 1], e.Location, P[found1 + 1]);
+                    /*
+                    PointF temp = SzamolY(P[found1 - 1], e.Location, P[found1 + 1]);
+                    if (temp.Y <0)
+                    {
+                        temp.Y = 0;
+                        PointF temp2 = SzamolX(P[found1 - 1], e.Location, P[found1 + 1]);
+                        temp.X = temp2.X;
+                        P[found1 + 1] = temp;
+                    }
+                    else*/
+                        P[found1 + 1] = SzamolY(P[found1 - 1], e.Location, P[found1 + 1]);
                 }
-                else if (found1 != 0 && (found1 + 1) % 3 == 0 && found1 + 2 < P.Count) //az egyenest alkotó 1. pont
+                else if (found1 != 0 && found1 != 1 && (found1 + 1) % 3 == 0 && found1 + 2 < P.Count) //az egyenest alkotó 1. pont
                 {
                     P[found1] = e.Location;
                     P[found1 + 2] = SzamolY(e.Location, P[found1 + 1], P[found1 + 2]);
@@ -216,6 +226,17 @@ namespace BevGrafVizsgaBezier
             float m2 = (p2.Y - p1.Y) / (p2.X - p1.X);
             uj.X = p3.X;
             uj.Y = m2 * (uj.X - p1.X) + p1.Y;
+
+            return uj;
+        }
+        private PointF SzamolX(PointF p1, PointF p2, PointF p3) 
+        {
+            PointF uj = new PointF();
+            float m2 = (p2.Y - p1.Y) / (p2.X - p1.X);
+            uj.Y = p3.Y;
+
+            uj.X = (uj.X - p1.Y) / m2 + p1.X;
+            
 
             return uj;
         }
