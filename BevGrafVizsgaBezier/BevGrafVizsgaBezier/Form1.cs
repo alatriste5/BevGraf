@@ -44,20 +44,22 @@ namespace BevGrafVizsgaBezier
             for (int i = 0; i < P.Count - 1; i++)
                 g.DrawLine(penBlack, P[i], P[i + 1]);
 
-            //Vizsgálom, hogy a következő pont amit le akarok tenni az egyenesre kell-e kerüljön
-            if (P.Count == 4 + korszam * 3)
+            if (P.Count >= 4)//Ha 4nél több pont van akkor biztos rajzolni kell legalább 1 görbét
             {
-                for (int i = 0; i < P.Count / 3; i++) //Kirajzolja a BezierGörbét az első 4 majd onnan minden további 4-4 pontra
+                for (int i = 0; i < (P.Count-1) / 3; i++) //Annyi görbét kell rajzolni, amennyiszer a 3 megvan a db szám-1-ben.
                 {
                     int k = i * 3;
-                    DrawBezier(P[P.Count - 4 - k], P[P.Count - 3 - k], P[P.Count - 2 - k], P[P.Count - 1 - k]);
+                    DrawBezier(P[0 + k], P[1 + k], P[2 + k], P[3 + k]);
                 }
 
-                //generálni a piros vonalat az utolsó 2 pont alapján a lap széléig
-                PointF C = kepszelehezpont(P[P.Count - 1], P[P.Count - 2]);
-                g.DrawLine(penRed, P[P.Count - 1], C);
+                if (P.Count == 4 + korszam * 3) 
+                {
+                    //Elsőre a 4. pont után aztán ezután minden 3. pontnál kell nekünk a vezetővonal
+                    PointF C = kepszelehezpont(P[P.Count - 1], P[P.Count - 2]);
+                    g.DrawLine(penRed, P[P.Count - 1], C);
+                }
             }
-
+            
             //Pontok kirajzlása 
             for (int i = 0; i < P.Count; i++)
             {
@@ -117,7 +119,7 @@ namespace BevGrafVizsgaBezier
                         P[found1 + 1] = temp;
                     }
                     else*/
-                        P[found1 + 1] = SzamolY(P[found1 - 1], e.Location, P[found1 + 1]);
+                    P[found1 + 1] = SzamolY(P[found1 - 1], e.Location, P[found1 + 1]);
                 }
                 else if (found1 != 0 && found1 != 1 && (found1 + 1) % 3 == 0 && found1 + 2 < P.Count) //az egyenest alkotó 1. pont
                 {
