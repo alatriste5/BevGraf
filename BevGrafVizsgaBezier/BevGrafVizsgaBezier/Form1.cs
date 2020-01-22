@@ -20,7 +20,6 @@ namespace BevGrafVizsgaBezier
         Pen penBlack = Pens.Black;
         Pen penRed = Pens.Red;
         Pen pCurve = new Pen(Color.Blue, 3.0f);
-        PointF pont;
 
         int found1 = -1;
 
@@ -48,13 +47,13 @@ namespace BevGrafVizsgaBezier
             {
                 for (int i = 0; i < (P.Count-1) / 3; i++) //Annyi görbét kell rajzolni, amennyiszer a 3 megvan a db szám-1-ben.
                 {
-                    int k = i * 3;
+                    int k = i * 3; //Mindig 4 pontból áll 1 görbe, ahol az elsőt kivéve az előző utolsó pontja a következő első pontja
                     DrawBezier(P[0 + k], P[1 + k], P[2 + k], P[3 + k]);
                 }
 
                 if (P.Count == 4 + korszam * 3) 
                 {
-                    //Elsőre a 4. pont után aztán ezután minden 3. pontnál kell nekünk a vezetővonal
+                    //Elsőre a 4. pont után, ezután minden 3. pontnál kell nekünk a vezetővonal
                     PointF C = kepszelehezpont(P[P.Count - 1], P[P.Count - 2]);
                     g.DrawLine(penRed, P[P.Count - 1], C);
                 }
@@ -70,7 +69,7 @@ namespace BevGrafVizsgaBezier
 
         private void Canvas_MouseDown(object sender, MouseEventArgs e)
         {
-            for (int i = 0; i < P.Count; i++) //Ha az egérrel egy pontra kattintottam
+            for (int i = 0; i < P.Count; i++) //Ha az egérrel egy már meglévő pontra kattintottam
             {
                 if (Math.Abs(P[i].X - e.X) <= hibahatar && Math.Abs(P[i].Y - e.Y) <= hibahatar)
                     found1 = i;
@@ -81,8 +80,7 @@ namespace BevGrafVizsgaBezier
                 if (P.Count == 4 + korszam * 3) //Ha a most létrehozni kívánt pont korlátozás alá esik (az előző 2 egyenesére kéne kerüljön)
                 {
                     found2 = false;
-                    pont = e.Location;
-                    rajtavan(P[P.Count - 2], P[P.Count - 1], pont); //Vizsgálat, hogy az előző 2 pont által rajzolt piros egyenesre tettem-e a pontot
+                    rajtavan(P[P.Count - 2], P[P.Count - 1], e.Location); //Vizsgálat, hogy az előző 2 pont által rajzolt piros egyenesre tettem-e a pontot
                 }
                 if (found2) /*defaultba lefut és létrehoz 1 új pontot, azonban ha ez a pont a korlátozás alá eső akkor csak akkor lehet a found2 igaz
                                 ha a rajtavan fgv lefutott és a vonalon hozom létra az új pontot*/
@@ -102,7 +100,7 @@ namespace BevGrafVizsgaBezier
                     indexe 4,7,10 -> tehát 2-t hozzáadva 6,9,12-t kapok
                     Ha ezek egyikéről van szó akkor az egér helyzete alapján az egyenes egyenletével kiszámolom, hogy csak a vonalon lehessen
                     mozgatni.*/
-                if (found1 != 0 && found1 != 1 && found1 != 1 && (found1 + 2) % 3 == 0)
+                if (found1 != 0 && found1 != 1 && (found1 + 2) % 3 == 0)
                 {
                     P[found1] = SzamolY(P[found1], P[found1 - 1], e.Location);
                 }
@@ -119,14 +117,14 @@ namespace BevGrafVizsgaBezier
                         P[found1 + 1] = temp;
                     }
                     else*/
-                    P[found1 + 1] = SzamolY(P[found1 - 1], e.Location, P[found1 + 1]);
+                    P[found1 + 1] = SzamolY(P[found1 - 1], e.Location, P[found1 + 1]); //az egyenesen lévő pont új helye
                 }
                 else if (found1 != 0 && found1 != 1 && (found1 + 1) % 3 == 0 && found1 + 2 < P.Count) //az egyenest alkotó 1. pont
                 {
                     P[found1] = e.Location;
                     P[found1 + 2] = SzamolY(e.Location, P[found1 + 1], P[found1 + 2]);
                 }
-                else //ha nem arról van szó akkor pedig korlátozás nélkül áthelyezhető
+                else //ha nem ezekről van szó akkor pedig korlátozás nélkül áthelyezhető
                 {
                     P[found1] = e.Location;
                 }
@@ -185,15 +183,15 @@ namespace BevGrafVizsgaBezier
             else return Binom(n - 1, k - 1) + Binom(n - 1, k);
         }
 
-        private PointF kepszelehezpont(PointF p1, PointF p2) //pontot tesz a képernyő szélére
+        private PointF kepszelehezpont(PointF pmin1, PointF pmin2) //pontot tesz a képernyő szélére
         {
             PointF uj = new PointF();
-            m = (p2.Y - p1.Y) / (p2.X - p1.X);
-            if (p1.X < p2.X)
+            m = (pmin2.Y - pmin1.Y) / (pmin2.X - pmin1.X);
+            if (pmin1.X < pmin2.X)
                 uj.X = 0;
             else
                 uj.X = Canvas.Width;
-            uj.Y = m * (uj.X - p1.X) + p1.Y;
+            uj.Y = m * (uj.X - pmin1.X) + pmin1.Y;
 
             return uj;
         }
@@ -201,19 +199,19 @@ namespace BevGrafVizsgaBezier
         private void rajtavan(PointF uelotti, PointF utolso, PointF pont) /*Vizsgálja, hogy megadott 2 pont alapjána 3.
                                                                             az általuk meghatározott egyenesre esik-e.*/
         {
-            float temp = Math.Abs(m * (pont.X - utolso.X) + utolso.Y);
-            if (uelotti.X <= utolso.X && utolso.X <= pont.X)
+            float temp = m * (pont.X - utolso.X) + utolso.Y;
+            if (uelotti.X <= utolso.X && utolso.X <= pont.X) //azért van 2 ága, hogy a kirajzolt pirosba fogadja csak el és a vonal másik vége ne számítson
             {
-                if (temp - hibahatar <= Math.Abs(pont.Y) && Math.Abs(pont.Y) <= temp + hibahatar)
+                if (temp - hibahatar <= pont.Y && pont.Y <= temp + hibahatar) //a vonal hibahatáron belüli részére kattintottam-e
                 {
                     korszam++;
                     found2 = true;
                 }
 
             }
-            else if (uelotti.X >= utolso.X && utolso.X >= pont.X)
+            else if (uelotti.X > utolso.X && utolso.X > pont.X)
             {
-                if (temp - hibahatar <= Math.Abs(pont.Y) && Math.Abs(pont.Y) <= temp + hibahatar)
+                if (temp - hibahatar <= pont.Y && pont.Y <= temp + hibahatar)
                 {
                     korszam++;
                     found2 = true;
